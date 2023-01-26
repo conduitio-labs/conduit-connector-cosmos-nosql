@@ -1,4 +1,4 @@
-module github.com/conduitio/conduit-connector-cosmos-nosql
+module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 
 go 1.19
 
