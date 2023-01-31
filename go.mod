@@ -2,15 +2,23 @@ module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 
 go 1.19
 
-require github.com/conduitio/conduit-connector-sdk v0.4.3
+require (
+	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v0.3.3
+	github.com/conduitio/conduit-connector-sdk v0.4.3
+	github.com/huandu/go-sqlbuilder v1.19.0
+)
 
 require (
+	github.com/Azure/azure-sdk-for-go v63.2.0+incompatible // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.0.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.0 // indirect
 	github.com/conduitio/conduit-connector-protocol v0.4.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/go-hclog v0.14.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.3 // indirect
 	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect
+	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect

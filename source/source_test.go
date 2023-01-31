@@ -12,16 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cosmosnosql
+package source
 
 import (
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/source"
-	sdk "github.com/conduitio/conduit-connector-sdk"
+	"context"
+	"reflect"
+	"testing"
 )
 
-// Connector is a sdk.Connector of Azure Cosmos DB for NoSQL.
-var Connector = sdk.Connector{
-	NewSpecification: Specification,
-	NewSource:        source.New,
-	NewDestination:   nil,
+func TestSource_Configure(t *testing.T) {
+	t.Parallel()
+
+	s := Source{}
+
+	var (
+		raw = map[string]string{
+			ConfigKeyOrderingKey: "id",
+			ConfigKeySnapshot:    "false",
+			ConfigKeyBatchSize:   "5000",
+		}
+		want = Config{
+			OrderingKey: "id",
+			Snapshot:    false,
+			BatchSize:   5000,
+		}
+	)
+
+	err := s.Configure(context.Background(), raw)
+	if err != nil {
+		t.Errorf("unexpected error: %s", err.Error())
+
+		return
+	}
+
+	if !reflect.DeepEqual(s.config, want) {
+		t.Errorf("got: %v, want: %v", s.config, want)
+	}
 }
