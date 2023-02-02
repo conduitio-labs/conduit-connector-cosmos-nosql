@@ -54,7 +54,7 @@ type iterator struct {
 // newIterator creates a new instance of the iterator.
 func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (*iterator, error) {
 	iter := &iterator{
-		partitionKey: azcosmos.NewPartitionKeyString(config.PartitionKey),
+		partitionKey: azcosmos.NewPartitionKeyString(config.PartitionValue),
 		container:    config.Container,
 		keys:         config.Keys,
 		orderingKey:  config.OrderingKey,
@@ -172,6 +172,14 @@ func (iter *iterator) Next() (sdk.Record, error) {
 	}
 	metadata.SetCreatedAt(time.Now().UTC())
 
+	// remove the processed items from the slice
+	iter.items = iter.items[1:]
+
+	// if there are no items - set nil
+	if len(iter.items) == 0 {
+		iter.items = nil
+	}
+
 	if pos.LatestSnapshotValue != nil {
 		return sdk.Util.Source.NewRecordSnapshot(convertedPosition, metadata, key, sdk.RawData(rowBytes)), nil
 	}
@@ -183,7 +191,7 @@ func (iter *iterator) Next() (sdk.Record, error) {
 // of the most recent item in the container.
 func (iter *iterator) latestSnapshotValue(ctx context.Context) (any, error) {
 	query := sqlbuilder.NewSelectBuilder().
-		Select(iter.orderingKey).
+		Select(allColumns).
 		From(table).
 		OrderBy(fmt.Sprintf(field, table, iter.orderingKey)).Desc().
 		SQL(fmt.Sprintf(limit, 1)).
@@ -203,19 +211,22 @@ func (iter *iterator) latestSnapshotValue(ctx context.Context) (any, error) {
 
 // latestSnapshotValue returns the value of the orderingKey key of the most recent value item.
 func (iter *iterator) loadItems(ctx context.Context) error {
-	var err error
+	var queryParams []azcosmos.QueryParameter
 
 	sb := sqlbuilder.NewSelectBuilder().
 		Select(allColumns).
 		From(table).
 		OrderBy(fmt.Sprintf(field, table, iter.orderingKey)).Asc().
-		SQL(fmt.Sprintf(limit, iter.batchSize)).
-		Where(fmt.Sprintf(greaterThan, fmt.Sprintf(field, table, iter.orderingKey), lastProcessedParam))
+		SQL(fmt.Sprintf(limit, iter.batchSize))
 
-	queryParams := []azcosmos.QueryParameter{{
-		Name:  lastProcessedParam,
-		Value: iter.position.LastProcessedValue,
-	}}
+	if iter.position.LastProcessedValue != nil {
+		sb.Where(fmt.Sprintf(greaterThan, fmt.Sprintf(field, table, iter.orderingKey), lastProcessedParam))
+
+		queryParams = append(queryParams, azcosmos.QueryParameter{
+			Name:  lastProcessedParam,
+			Value: iter.position.LastProcessedValue,
+		})
+	}
 
 	if iter.position.LatestSnapshotValue != nil {
 		sb.Where(fmt.Sprintf(lessThanOrEqual, fmt.Sprintf(field, table, iter.orderingKey), latestSnapshotParam))
@@ -226,10 +237,13 @@ func (iter *iterator) loadItems(ctx context.Context) error {
 		})
 	}
 
-	iter.items, err = iter.selectItems(ctx, sb.String(), queryParams...)
+	items, err := iter.selectItems(ctx, sb.String(), queryParams...)
 	if err != nil {
 		return fmt.Errorf("select items: %w", err)
 	}
+
+	// append new items to the end of the iter.items slice
+	iter.items = append(iter.items, items...)
 
 	return nil
 }

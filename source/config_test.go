@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package config
+package source
 
 import (
 	"reflect"
@@ -21,25 +21,19 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
-func TestConfig_Parse_success(t *testing.T) {
+func TestConfig_ParseSource_success(t *testing.T) {
 	t.Parallel()
 
 	var (
 		raw = map[string]string{
-			KeyURI:            "https://localhost:8081",
-			KeyPrimaryKey:     "C2y6yDjf5",
-			KeyDatabase:       "database_id",
-			KeyContainer:      "container_it",
-			KeyPartitionValue: "partVal_test",
-			KeyKeys:           "id,name,created_at",
+			ConfigKeyOrderingKey: "id",
+			ConfigKeySnapshot:    "false",
+			ConfigKeyBatchSize:   "5000",
 		}
 		want = Config{
-			URI:            "https://localhost:8081",
-			PrimaryKey:     "C2y6yDjf5",
-			Database:       "database_id",
-			Container:      "container_it",
-			PartitionValue: "partVal_test",
-			Keys:           []string{"id", "name", "created_at"},
+			OrderingKey: "id",
+			Snapshot:    false,
+			BatchSize:   5000,
 		}
 	)
 

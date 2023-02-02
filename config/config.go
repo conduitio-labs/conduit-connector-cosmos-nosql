@@ -23,8 +23,8 @@ const (
 	KeyDatabase = "database"
 	// KeyContainer is the config name for a container field.
 	KeyContainer = "container"
-	// KeyPartitionKey is the config name for a partitionKey field.
-	KeyPartitionKey = "partitionKey"
+	// KeyPartitionValue is the config name for a partitionValue field.
+	KeyPartitionValue = "partitionValue"
 	// KeyKeys is the config name for a keys field.
 	KeyKeys = "keys"
 )
@@ -40,7 +40,7 @@ type Config struct {
 	// The name of a container the connector should work with.
 	Container string `json:"container" validate:"required"`
 	// The logical partition key value.
-	PartitionKey string `json:"partitionKey" validate:"required"`
+	PartitionValue string `json:"partitionValue" validate:"required"`
 	// Comma-separated list of key names to build the sdk.Record.Key.
 	Keys []string `json:"keys"`
 }

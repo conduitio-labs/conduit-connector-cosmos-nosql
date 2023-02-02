@@ -53,6 +53,11 @@ func (s *Source) Configure(ctx context.Context, raw map[string]string) error {
 		return fmt.Errorf("parse source config: %w", err)
 	}
 
+	// if there is no keys - use the orderingKey as a record key
+	if len(s.config.Keys) == 0 {
+		s.config.Keys = []string{s.config.OrderingKey}
+	}
+
 	return nil
 }
 

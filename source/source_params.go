@@ -48,7 +48,7 @@ func (Config) Parameters() map[string]sdk.Parameter {
 				sdk.ValidationRequired{},
 			},
 		},
-		"partitionKey": {
+		"partitionValue": {
 			Default:     "",
 			Description: "The logical partition key value.",
 			Type:        sdk.ParameterTypeString,

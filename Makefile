@@ -15,3 +15,6 @@ dep:
 
 paramgen:
 	paramgen -path=./source -output=source_params.go Config
+
+mockgen:
+	mockgen -package mock -source source/source.go -destination source/mock/source.go
