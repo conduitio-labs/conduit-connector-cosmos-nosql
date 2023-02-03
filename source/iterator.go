@@ -65,16 +65,19 @@ func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (
 		iter.keys = []string{iter.orderingKey}
 	}
 
+	// create an KeyCredential containing the account's primary key
 	cred, err := azcosmos.NewKeyCredential(config.PrimaryKey)
 	if err != nil {
 		return nil, fmt.Errorf("new key credential: %w", err)
 	}
 
+	// create a new instance of Cosmos client
 	client, err := azcosmos.NewClientWithKey(config.URI, cred, nil)
 	if err != nil {
 		return nil, fmt.Errorf("new client: %w", err)
 	}
 
+	// create a new instance of the specific container client
 	iter.containerClient, err = client.NewContainer(config.Database, config.Container)
 	if err != nil {
 		return nil, fmt.Errorf("new container client: %w", err)
@@ -107,6 +110,7 @@ func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (
 	return iter, nil
 }
 
+// HasNext returns a bool indicating whether the source has the next record to return or not.
 func (iter *iterator) HasNext(ctx context.Context) (bool, error) {
 	if iter.items != nil {
 		return true, nil
@@ -138,6 +142,7 @@ func (iter *iterator) HasNext(ctx context.Context) (bool, error) {
 	return false, nil
 }
 
+// Next returns the next record.
 func (iter *iterator) Next() (sdk.Record, error) {
 	key := make(sdk.StructuredData)
 	for i := range iter.keys {
