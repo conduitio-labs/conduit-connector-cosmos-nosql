@@ -1,4 +1,4 @@
-// Copyright © 2023 Meroxa, Inc. & Yalantis
+// Copyright © 2022 Meroxa, Inc. & Yalantis
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cosmosnosql
+package common
 
-import (
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/source"
-	sdk "github.com/conduitio/conduit-connector-sdk"
-)
-
-// Connector is a sdk.Connector of Azure Cosmos DB for NoSQL.
-var Connector = sdk.Connector{
-	NewSpecification: Specification,
-	NewSource:        source.New,
-	NewDestination:   nil,
-}
+const MetadataCosmosDBForNoSQLTable = "cosmos-nosql.table"

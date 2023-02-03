@@ -1,4 +1,4 @@
-.PHONY: build test test-integration
+.PHONY: build test lint dep paramgen
 
 build:
 	go build -o conduit-connector-cosmos-nosql cmd/connector/main.go
@@ -12,3 +12,9 @@ lint:
 dep:
 	go mod download
 	go mod tidy
+
+paramgen:
+	paramgen -path=./source -output=source_params.go Config
+
+mockgen:
+	mockgen -package mock -source source/source.go -destination source/mock/source.go
