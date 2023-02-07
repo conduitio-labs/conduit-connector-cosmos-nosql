@@ -40,6 +40,12 @@ func (Config) Parameters() map[string]sdk.Parameter {
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
+		"metaProperties": {
+			Default:     "false",
+			Description: "metaProperties whether the connector takes the next automatically generated meta-properties: \"_rid\", \"_ts\", \"_self\", \"_etag\", \"_attachments\".",
+			Type:        sdk.ParameterTypeBool,
+			Validations: []sdk.Validation{},
+		},
 		"orderingKey": {
 			Default:     "",
 			Description: "The name of a key that is used for ordering items.",
@@ -66,7 +72,7 @@ func (Config) Parameters() map[string]sdk.Parameter {
 		},
 		"snapshot": {
 			Default:     "true",
-			Description: "Determines whether the connector will take a snapshot of all items before starting CDC mode.",
+			Description: "Determines whether the connector takes a snapshot of all items before starting CDC mode.",
 			Type:        sdk.ParameterTypeBool,
 			Validations: []sdk.Validation{},
 		},

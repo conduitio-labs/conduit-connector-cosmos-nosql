@@ -14,4 +14,11 @@
 
 package common
 
-const MetadataCosmosDBForNoSQLTable = "cosmos-nosql.table"
+const (
+	// KeyID is the mandatory key for each database item.
+	KeyID = "id"
+	// TestEnvNameURI is a key for connection uri pointed to an Azure Cosmos DB for NoSQL instance.
+	TestEnvNameURI = "COSMOS_NOSQL_URI"
+	// TestEnvNamePrimaryKey is a key for authentication with Azure Cosmos DB.
+	TestEnvNamePrimaryKey = "COSMOS_NOSQL_PRIMARY_KEY"
+)

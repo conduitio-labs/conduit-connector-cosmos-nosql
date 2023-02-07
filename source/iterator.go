@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/common"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/huandu/go-sqlbuilder"
 )
@@ -35,7 +34,11 @@ const (
 	greaterThan         = "%s > %s"
 	lastProcessedParam  = "@lastProcessed"
 	latestSnapshotParam = "@latestSnapshot"
+
+	metadataFieldContainer = "cosmos-nosql.container"
 )
+
+var metaProperties = []string{"_rid", "_ts", "_self", "_etag", "_attachments"}
 
 // iterator is an implementation of an iterator for Azure Cosmos DB for NoSQL.
 type iterator struct {
@@ -43,10 +46,11 @@ type iterator struct {
 	containerClient *azcosmos.ContainerClient
 	partitionKey    azcosmos.PartitionKey
 
-	container   string
-	keys        []string
-	orderingKey string
-	batchSize   uint
+	container      string
+	keys           []string
+	orderingKey    string
+	metaProperties bool
+	batchSize      uint
 
 	items []sdk.StructuredData
 }
@@ -54,15 +58,12 @@ type iterator struct {
 // newIterator creates a new instance of the iterator.
 func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (*iterator, error) {
 	iter := &iterator{
-		partitionKey: azcosmos.NewPartitionKeyString(config.PartitionValue),
-		container:    config.Container,
-		keys:         config.Keys,
-		orderingKey:  config.OrderingKey,
-		batchSize:    config.BatchSize,
-	}
-
-	if len(iter.keys) == 0 {
-		iter.keys = []string{iter.orderingKey}
+		partitionKey:   azcosmos.NewPartitionKeyString(config.PartitionValue),
+		container:      config.Container,
+		keys:           config.Keys,
+		orderingKey:    config.OrderingKey,
+		metaProperties: config.MetaProperties,
+		batchSize:      config.BatchSize,
 	}
 
 	// create an KeyCredential containing the account's primary key
@@ -154,6 +155,13 @@ func (iter *iterator) Next() (sdk.Record, error) {
 		key[iter.keys[i]] = val
 	}
 
+	if !iter.metaProperties {
+		// remove meta auto-generated properties
+		for i := range metaProperties {
+			delete(iter.items[0], metaProperties[i])
+		}
+	}
+
 	rowBytes, err := json.Marshal(iter.items[0])
 	if err != nil {
 		return sdk.Record{}, fmt.Errorf("marshal item: %w", err)
@@ -173,7 +181,7 @@ func (iter *iterator) Next() (sdk.Record, error) {
 	iter.position = &pos
 
 	metadata := sdk.Metadata{
-		common.MetadataCosmosDBForNoSQLTable: iter.container,
+		metadataFieldContainer: iter.container,
 	}
 	metadata.SetCreatedAt(time.Now().UTC())
 

@@ -26,14 +26,18 @@ func TestConfig_ParseSource_success(t *testing.T) {
 
 	var (
 		raw = map[string]string{
-			ConfigKeyOrderingKey: "id",
-			ConfigKeySnapshot:    "false",
-			ConfigKeyBatchSize:   "5000",
+			ConfigKeyOrderingKey:    "id",
+			ConfigKeyKeys:           "name,created_at",
+			ConfigKeySnapshot:       "false",
+			ConfigKeyMetaProperties: "true",
+			ConfigKeyBatchSize:      "5000",
 		}
 		want = Config{
-			OrderingKey: "id",
-			Snapshot:    false,
-			BatchSize:   5000,
+			OrderingKey:    "id",
+			Keys:           []string{"name", "created_at"},
+			Snapshot:       false,
+			MetaProperties: true,
+			BatchSize:      5000,
 		}
 	)
 

@@ -23,16 +23,10 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
+	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/common"
 	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/matryer/is"
-)
-
-const (
-	// envNameURI is a key for connection uri pointed to an Azure Cosmos DB for NoSQL instance.
-	envNameURI = "COSMOS_NOSQL_URI"
-	// envNamePrimaryKey is a key for authentication with Azure Cosmos DB.
-	envNamePrimaryKey = "COSMOS_NOSQL_PRIMARY_KEY"
 )
 
 func TestSource_Read_databaseDoesNotExist(t *testing.T) {
@@ -198,6 +192,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 		"key2": float64(1),
 	}))
 	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":1,"latestSnapshotValue":2}`))
+	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"3794cb1a","key1":"1","key2":1,"partKey":"partVal"}`))
 
 	cancel()
 
@@ -231,6 +226,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 		"key2": float64(2),
 	}))
 	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":2,"latestSnapshotValue":2}`))
+	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"ed053fb6","key1":"2","key2":2,"partKey":"partVal"}`))
 
 	record, err = src.Read(cctx)
 	is.NoErr(err)
@@ -239,6 +235,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 		"key2": float64(3),
 	}))
 	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":3,"latestSnapshotValue":null}`))
+	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"2452d9a6","key1":"3","key2":3,"partKey":"partVal"}`))
 
 	_, err = src.Read(cctx)
 	is.Equal(err, sdk.ErrBackoffRetry)
@@ -259,6 +256,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 		"key2": float64(4),
 	}))
 	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":4,"latestSnapshotValue":null}`))
+	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"d0e7c1af","key1":"4","key2":4,"partKey":"partVal"}`))
 
 	cancel()
 
@@ -379,16 +377,16 @@ func TestSource_Read_snapshotIsFalse(t *testing.T) {
 func prepareConfig(t *testing.T, orderingKey, snapshot string, keys ...string) map[string]string {
 	t.Helper()
 
-	uri := os.Getenv(envNameURI)
+	uri := os.Getenv(common.TestEnvNameURI)
 	if uri == "" {
-		t.Skipf("%s env var must be set", envNameURI)
+		t.Skipf("%s env var must be set", common.TestEnvNameURI)
 
 		return nil
 	}
 
-	primaryKey := os.Getenv(envNamePrimaryKey)
+	primaryKey := os.Getenv(common.TestEnvNamePrimaryKey)
 	if primaryKey == "" {
-		t.Skipf("%s env var must be set", envNamePrimaryKey)
+		t.Skipf("%s env var must be set", common.TestEnvNamePrimaryKey)
 
 		return nil
 	}
@@ -401,9 +399,10 @@ func prepareConfig(t *testing.T, orderingKey, snapshot string, keys ...string) m
 		config.KeyDatabase:       fmt.Sprintf("conduit_test_db_%d", unixNano),
 		config.KeyContainer:      fmt.Sprintf("conduit_test_container_%d", unixNano),
 		config.KeyPartitionValue: "partVal",
-		config.KeyKeys:           strings.Join(keys, ","),
 		ConfigKeyOrderingKey:     orderingKey,
+		ConfigKeyKeys:            strings.Join(keys, ","),
 		ConfigKeySnapshot:        snapshot,
+		ConfigKeyMetaProperties:  "false",
 		ConfigKeyBatchSize:       "100",
 	}
 }
