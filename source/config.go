@@ -19,8 +19,12 @@ import "github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
 const (
 	// ConfigKeyOrderingKey is a config name for a orderingKey field.
 	ConfigKeyOrderingKey = "orderingKey"
+	// ConfigKeyKeys is the config name for a keys field.
+	ConfigKeyKeys = "keys"
 	// ConfigKeySnapshot is a config name for a snapshot field.
 	ConfigKeySnapshot = "snapshot"
+	// ConfigKeyMetaProperties is a config name for a metaProperties field.
+	ConfigKeyMetaProperties = "metaProperties"
 	// ConfigKeyBatchSize is a config name for a batchSize field.
 	ConfigKeyBatchSize = "batchSize"
 )
@@ -31,9 +35,15 @@ type Config struct {
 
 	// The name of a key that is used for ordering items.
 	OrderingKey string `json:"orderingKey" validate:"required"`
-	// Determines whether the connector will take a snapshot
+	// Comma-separated list of key names to build the sdk.Record.Key.
+	Keys []string `json:"keys"`
+	// Determines whether the connector takes a snapshot
 	// of all items before starting CDC mode.
 	Snapshot bool `json:"snapshot" default:"true"`
+	// MetaProperties whether the connector takes
+	// the next automatically generated meta-properties:
+	// "_rid", "_ts", "_self", "_etag", "_attachments".
+	MetaProperties bool `json:"metaProperties" default:"false"`
 	// The size of an element batch.
 	BatchSize uint `json:"batchSize" validate:"gt=0,lt=100001" default:"1000"`
 }

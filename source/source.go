@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/common"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
@@ -53,9 +54,9 @@ func (s *Source) Configure(ctx context.Context, raw map[string]string) error {
 		return fmt.Errorf("parse source config: %w", err)
 	}
 
-	// if there is no keys - use the orderingKey as a record key
+	// if there is no keys - use the 'id' as a record key
 	if len(s.config.Keys) == 0 {
-		s.config.Keys = []string{s.config.OrderingKey}
+		s.config.Keys = []string{common.KeyID}
 	}
 
 	return nil

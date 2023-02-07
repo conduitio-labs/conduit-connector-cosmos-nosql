@@ -31,7 +31,6 @@ func TestConfig_Parse_success(t *testing.T) {
 			KeyDatabase:       "database_id",
 			KeyContainer:      "container_it",
 			KeyPartitionValue: "partVal_test",
-			KeyKeys:           "id,name,created_at",
 		}
 		want = Config{
 			URI:            "https://localhost:8081",
@@ -39,7 +38,6 @@ func TestConfig_Parse_success(t *testing.T) {
 			Database:       "database_id",
 			Container:      "container_it",
 			PartitionValue: "partVal_test",
-			Keys:           []string{"id", "name", "created_at"},
 		}
 	)
 

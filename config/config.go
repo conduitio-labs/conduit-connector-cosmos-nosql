@@ -25,8 +25,6 @@ const (
 	KeyContainer = "container"
 	// KeyPartitionValue is the config name for a partitionValue field.
 	KeyPartitionValue = "partitionValue"
-	// KeyKeys is the config name for a keys field.
-	KeyKeys = "keys"
 )
 
 // Config contains common source and destination configurable values.
@@ -41,6 +39,4 @@ type Config struct {
 	Container string `json:"container" validate:"required"`
 	// The logical partition key value.
 	PartitionValue string `json:"partitionValue" validate:"required"`
-	// Comma-separated list of key names to build the sdk.Record.Key.
-	Keys []string `json:"keys"`
 }

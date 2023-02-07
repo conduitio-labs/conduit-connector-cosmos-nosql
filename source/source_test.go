@@ -41,9 +41,10 @@ func TestSource_Configure_success(t *testing.T) {
 			config.KeyDatabase:       "database_id",
 			config.KeyContainer:      "container_it",
 			config.KeyPartitionValue: "partVal_test",
-			config.KeyKeys:           "id,name,created_at",
 			ConfigKeyOrderingKey:     "id",
+			ConfigKeyKeys:            "name,created_at",
 			ConfigKeySnapshot:        "false",
+			ConfigKeyMetaProperties:  "true",
 			ConfigKeyBatchSize:       "5000",
 		}
 		want = Config{
@@ -53,11 +54,12 @@ func TestSource_Configure_success(t *testing.T) {
 				Database:       "database_id",
 				Container:      "container_it",
 				PartitionValue: "partVal_test",
-				Keys:           []string{"id", "name", "created_at"},
 			},
-			OrderingKey: "id",
-			Snapshot:    false,
-			BatchSize:   5000,
+			OrderingKey:    "id",
+			Keys:           []string{"name", "created_at"},
+			Snapshot:       false,
+			MetaProperties: true,
+			BatchSize:      5000,
 		}
 	)
 
