@@ -1,4 +1,4 @@
-.PHONY: build test lint dep paramgen
+.PHONY: build test lint dep paramgen mockgen
 
 build:
 	go build -o conduit-connector-cosmos-nosql cmd/connector/main.go
@@ -19,3 +19,4 @@ paramgen:
 
 mockgen:
 	mockgen -package mock -source source/source.go -destination source/mock/source.go
+	mockgen -package mock -source destination/destination.go -destination destination/mock/destination.go
