@@ -73,29 +73,12 @@ func (w *writer) Write(ctx context.Context, record sdk.Record) error {
 }
 
 func (w *writer) create(ctx context.Context, record sdk.Record) error {
-	payload := make(sdk.StructuredData)
-	if err := json.Unmarshal(record.Payload.After.Bytes(), &payload); err != nil {
-		return fmt.Errorf("unmarshal payload: %w", err)
+	err := w.populatePayloadWithID(&record)
+	if err != nil {
+		return fmt.Errorf("populate payload with %q key: %w", common.KeyID, err)
 	}
 
-	// if sdk.Record.Key does not contain the 'id' key
-	if _, okPayload := payload[common.KeyID]; !okPayload {
-		key := make(sdk.StructuredData)
-		if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
-			return fmt.Errorf("unmarshal key: %w", err)
-		}
-
-		id, okKey := key[common.KeyID]
-		if !okKey {
-			return fmt.Errorf("neither the sdk.Record.Key nor the sdk.Record.Payload contains the required %q key",
-				common.KeyID)
-		}
-
-		//nolint:forcetypeassert // there is no point in checking the type because it was unmarshalled above
-		record.Payload.After.(sdk.StructuredData)[common.KeyID] = id.(string)
-	}
-
-	_, err := w.containerClient.CreateItem(ctx, w.partitionKey, record.Payload.After.Bytes(), nil)
+	_, err = w.containerClient.CreateItem(ctx, w.partitionKey, record.Payload.After.Bytes(), nil)
 	if err != nil {
 		return fmt.Errorf("create item: %w", err)
 	}
@@ -104,30 +87,13 @@ func (w *writer) create(ctx context.Context, record sdk.Record) error {
 }
 
 func (w *writer) replace(ctx context.Context, record sdk.Record) error {
-	payload := make(sdk.StructuredData)
-	if err := json.Unmarshal(record.Payload.After.Bytes(), &payload); err != nil {
-		return fmt.Errorf("unmarshal payload: %w", err)
-	}
-
-	// if sdk.Record.Key does not contain the 'id' key
-	if _, okPayload := payload[common.KeyID]; !okPayload {
-		key := make(sdk.StructuredData)
-		if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
-			return fmt.Errorf("unmarshal key: %w", err)
-		}
-
-		id, okKey := key[common.KeyID]
-		if !okKey {
-			return fmt.Errorf("neither the sdk.Record.Key nor the sdk.Record.Payload contains the required %q key",
-				common.KeyID)
-		}
-
-		//nolint:forcetypeassert // there is no point in checking the type because it was unmarshalled above
-		record.Payload.After.(sdk.StructuredData)[common.KeyID] = id.(string)
+	err := w.populatePayloadWithID(&record)
+	if err != nil {
+		return fmt.Errorf("populate payload with %q key: %w", common.KeyID, err)
 	}
 
 	key := make(sdk.StructuredData)
-	if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
+	if err = json.Unmarshal(record.Key.Bytes(), &key); err != nil {
 		return fmt.Errorf("unmarshal key: %w", err)
 	}
 
@@ -136,7 +102,7 @@ func (w *writer) replace(ctx context.Context, record sdk.Record) error {
 		return fmt.Errorf("sdk.Record.Key does not contain the required %q key", common.KeyID)
 	}
 
-	_, err := w.containerClient.ReplaceItem(ctx, w.partitionKey, id.(string), record.Payload.After.Bytes(), nil)
+	_, err = w.containerClient.ReplaceItem(ctx, w.partitionKey, id.(string), record.Payload.After.Bytes(), nil)
 	if err != nil {
 		return fmt.Errorf("replace item: %w", err)
 	}
@@ -161,4 +127,31 @@ func (w *writer) delete(ctx context.Context, record sdk.Record) error {
 	}
 
 	return nil
+}
+
+// populatePayloadWithID populates the sdk.Record.Payload with id key
+// from the sdk.Record.Key, if it not exists.
+func (w *writer) populatePayloadWithID(record *sdk.Record) error {
+	payload := make(sdk.StructuredData)
+	if err := json.Unmarshal(record.Payload.After.Bytes(), &payload); err != nil {
+		return fmt.Errorf("unmarshal payload: %w", err)
+	}
+
+	if _, ok := payload[common.KeyID]; ok {
+		return nil
+	}
+
+	key := make(sdk.StructuredData)
+	if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
+		return fmt.Errorf("unmarshal key: %w", err)
+	}
+
+	if id, ok := key[common.KeyID]; ok {
+		//nolint:forcetypeassert // there is no point in checking the type because it was unmarshalled above
+		record.Payload.After.(sdk.StructuredData)[common.KeyID] = id.(string)
+
+		return nil
+	}
+
+	return fmt.Errorf("neither the sdk.Record.Key nor the sdk.Record.Payload contains the required %q key", common.KeyID)
 }
