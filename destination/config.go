@@ -12,17 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cosmosnosql
+package destination
 
-import (
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/destination"
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/source"
-	sdk "github.com/conduitio/conduit-connector-sdk"
-)
+import "github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
 
-// Connector is a sdk.Connector of Azure Cosmos DB for NoSQL.
-var Connector = sdk.Connector{
-	NewSpecification: Specification,
-	NewSource:        source.New,
-	NewDestination:   destination.New,
+// Config holds configurable values specific to the Destination.
+type Config struct {
+	config.Config
 }
