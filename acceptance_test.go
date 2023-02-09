@@ -34,22 +34,22 @@ import (
 type driver struct {
 	sdk.ConfigurableAcceptanceTestDriver
 
-	orderInt int64
+	i int64
 }
 
 // GenerateRecord generates a random sdk.Record.
 func (d *driver) GenerateRecord(_ *testing.T, operation sdk.Operation) sdk.Record {
-	atomic.AddInt64(&d.orderInt, 1)
+	atomic.AddInt64(&d.i, 1)
 
 	return sdk.Record{
 		Position:  nil,
 		Operation: operation,
 		Metadata:  map[string]string{},
 		Key: sdk.StructuredData{
-			"id": fmt.Sprintf("%d", d.orderInt),
+			"id": fmt.Sprintf("%d", d.i),
 		},
 		Payload: sdk.Change{After: sdk.RawData(
-			fmt.Sprintf(`{"col1":%d,"id":"%d","partKey":"partVal"}`, d.orderInt, d.orderInt),
+			fmt.Sprintf(`{"col1":%d,"id":"%d","partKey":"partVal"}`, d.i, d.i),
 		)},
 	}
 }
@@ -88,6 +88,7 @@ func TestAcceptance(t *testing.T) {
 				BeforeTest:        beforeTest(cfg),
 				AfterTest:         afterTest(cfg),
 				GoleakOptions: []goleak.Option{
+					// Azure SDK for Go does not have the method to close connection
 					goleak.IgnoreTopFunction("internal/poll.runtime_pollWait"),
 				},
 			},
