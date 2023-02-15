@@ -51,8 +51,17 @@ pagination, limiting by `batchSize` and ordering by `orderingKey`.
 | `container`      | Name of a container the connector should work with.                                                                                                                  | **true** | `collection_name`                |
 | `partitionValue` | Logical partition key value.                                                                                                                                         | **true** | `partValue`                      |
 | `orderingKey`    | Name of a key that is used for ordering items.                                                                                                                       | **true** | `id`                             |
-| `keys`           | Comma-separated list of key names to build the sdk.Record.Key.                                                                                                       | false    | `id,name`                        |
+| `keys`           | Comma-separated list of key names to build the `sdk.Record.Key`.                                                                                                     | false    | `id,name`                        |
 | `snapshot`       | Determines whether the connector takes a snapshot of all items before starting CDC mode. By default is `true`.                                                       | false    | `false`                          |
 | `metaProperties` | MetaProperties whether the connector takes the next automatically generated meta-properties: "_rid", "_ts", "_self", "_etag", "_attachments". By default is `false`. | false    | `true`                           |
-| `batchSize`      | Size of rows batch. Min is 1 and max is 100000. By default is `"1000"`.                                                                                              | false    | `100`                            |
+| `batchSize`      | Size of items batch. Min is 1 and max is 100000. By default is `"1000"`.                                                                                             | false    | `100`                            |
 
+### Key handling
+
+The connector builds `sdk.Record.Key` as `sdk.StructuredData`. The keys of this field consist of elements of the `keys`
+configuration field. The values of `sdk.Record.Key` field are taken from `sdk.Payload.After` by the keys of this field.
+
+### Table Name
+
+For each record, the connector adds a `cosmos-nosql.container` property to the metadata that contains the container
+name.
