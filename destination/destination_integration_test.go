@@ -46,6 +46,7 @@ func TestDestination_Read_databaseDoesNotExist(t *testing.T) {
 	n, err := dest.Write(cctx, []sdk.Record{
 		{
 			Operation: sdk.OperationSnapshot,
+			Key:       sdk.StructuredData{"id": "random_id"},
 			Payload: sdk.Change{
 				After: sdk.StructuredData{
 					"partKey": "partVal",
@@ -93,6 +94,7 @@ func TestDestination_Read_containerDoesNotExist(t *testing.T) {
 	n, err := dest.Write(cctx, []sdk.Record{
 		{
 			Operation: sdk.OperationSnapshot,
+			Key:       sdk.StructuredData{"id": "random_id"},
 			Payload: sdk.Change{
 				After: sdk.StructuredData{
 					"partKey": "partVal",
@@ -413,8 +415,8 @@ func TestDestination_Write_failedKeyAndPayloadHaveNoID(t *testing.T) {
 
 	n, err := dest.Write(cctx, records)
 	is.Equal(n, 0)
-	is.Equal(err.Error(), "write record: route record: populate payload with \"id\" key: "+
-		"neither the sdk.Record.Key nor the sdk.Record.Payload contains the required \"id\" key")
+	is.Equal(err.Error(), "write record: route record: get id from sdk.Record.Key: "+
+		"sdk.Record.Key does not contain the required \"id\" key")
 
 	is.NoErr(dest.Teardown(cctx))
 	cancel()
@@ -491,7 +493,7 @@ func TestDestination_Write_failedCreateExistingItem(t *testing.T) {
 
 	n, err := dest.Write(cctx, records)
 	is.Equal(n, 1)
-	is.True(strings.Contains(err.Error(), "Resource with specified id or name already exists"))
+	is.True(strings.Contains(err.Error(), "Entity with the specified id already exists in the system"))
 
 	is.NoErr(dest.Teardown(cctx))
 	cancel()
@@ -568,7 +570,7 @@ func TestDestination_Write_failedUpdateNonExistentItem(t *testing.T) {
 
 	n, err := dest.Write(cctx, records)
 	is.Equal(n, 1)
-	is.True(strings.Contains(err.Error(), "Resource Not Found"))
+	is.True(strings.Contains(err.Error(), "Entity with the specified id does not exist in the system"))
 
 	is.NoErr(dest.Teardown(cctx))
 	cancel()

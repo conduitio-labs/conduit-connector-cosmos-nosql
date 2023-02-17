@@ -65,3 +65,27 @@ configuration field. The values of `sdk.Record.Key` field are taken from `sdk.Pa
 
 For each record, the connector adds a `cosmos-nosql.container` property to the metadata that contains the container
 name.
+
+## Destination
+
+The Cosmos DB for NoSQL Destination Connector takes an `sdk.Record` and parses it into a valid Cosmos DB for NoSQL
+query. The `sdk.Record.Payload.After` must have a partition key value pair for `create` and `update` operations. 
+
+### Configuration Options
+
+| name             | description                                                      | required | example                          |
+|------------------|------------------------------------------------------------------|----------|----------------------------------|
+| `uri`            | Connection uri pointed to an Azure Cosmos DB for NoSQL instance. | **true** | `https://bfb.doc.azure.com:443/` |
+| `primaryKey`     | Key for authentication with Azure Cosmos DB.                     | **true** | `OJI6ALpypaOWACDbBh0kuA==`       |
+| `database`       | Name of a database the connector should work with.               | **true** | `db_name`                        |
+| `container`      | Name of a container the connector should work with.              | **true** | `collection_name`                |
+| `partitionValue` | Logical partition key value.                                     | **true** | `partValue`                      |
+
+### Key handling
+
+If the `sdk.Record.Key` does not have an `id` key, the connector returns an error.
+
+### Container Name
+
+If the record contains a `cosmos-nosql.container` property in its metadata, it will work with this container, otherwise,
+it will fall back to use the `container` configured in the connector.
