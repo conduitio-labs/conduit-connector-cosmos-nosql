@@ -61,7 +61,7 @@ pagination, limiting by `batchSize` and ordering by `orderingKey`.
 The connector builds `sdk.Record.Key` as `sdk.StructuredData`. The keys of this field consist of elements of the `keys`
 configuration field. The values of `sdk.Record.Key` field are taken from `sdk.Payload.After` by the keys of this field.
 
-### Table Name
+### Container Name
 
 For each record, the connector adds a `cosmos-nosql.container` property to the metadata that contains the container
 name.
