@@ -69,7 +69,7 @@ name.
 ## Destination
 
 The Cosmos DB for NoSQL Destination Connector takes an `sdk.Record` and parses it into a valid Cosmos DB for NoSQL
-query. The `sdk.Record.Payload.After` must have a partition key value pair for `create` and `update` operations. 
+query. The `sdk.Record.Payload.After` must have a partition key value pair for `create` and `update` operations.
 
 ### Configuration Options
 
@@ -83,7 +83,9 @@ query. The `sdk.Record.Payload.After` must have a partition key value pair for `
 
 ### Key handling
 
-If the `sdk.Record.Key` does not have an `id` key, the connector returns an error.
+The mandatory parameter of the conditions of all operations is `id`. The connector first tries to take the `id`
+parameter value from the `sdk.Record.Key` and then, if nothing was found, from the `sdk.Record.Payload.After`. If they
+both do not contain the `id` key, the connector returns an error.
 
 ### Container Name
 

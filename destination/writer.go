@@ -25,6 +25,8 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
+var errNoID = errors.New("neither the sdk.Record.Key nor the sdk.Record.Payload.After contains the `id` key")
+
 // Writer implements a writer logic for the Neo4j Destination.
 type writer struct {
 	containerClient *azcosmos.ContainerClient
@@ -125,23 +127,32 @@ func (w *writer) delete(ctx context.Context, record sdk.Record) error {
 	return nil
 }
 
-// getID returns a value by `id` jey from the sdk.Record.Key.
+// getID returns a value by `id` key from the sdk.Record.Key
+// or from the sdk.Record.Payload.After.
 func (w *writer) getID(record *sdk.Record) (string, error) {
-	if record.Key == nil {
-		return "", errors.New("sdk.Record.Key is empty")
+	if record.Key != nil {
+		key := make(sdk.StructuredData)
+		if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
+			return "", fmt.Errorf("unmarshal sdk.Record.Key: %w", err)
+		}
+
+		if id, ok := key[common.KeyID]; ok {
+			return fmt.Sprintf("%v", id), nil
+		}
 	}
 
-	key := make(sdk.StructuredData)
-	if err := json.Unmarshal(record.Key.Bytes(), &key); err != nil {
-		return "", fmt.Errorf("unmarshal sdk.Record.Key: %w", err)
+	if record.Payload.After != nil {
+		payload := make(sdk.StructuredData)
+		if err := json.Unmarshal(record.Payload.After.Bytes(), &payload); err != nil {
+			return "", fmt.Errorf("unmarshal payload: %w", err)
+		}
+
+		if id, ok := payload[common.KeyID]; ok {
+			return fmt.Sprintf("%v", id), nil
+		}
 	}
 
-	id, ok := key[common.KeyID]
-	if !ok {
-		return "", fmt.Errorf("sdk.Record.Key does not contain the required %q key", common.KeyID)
-	}
-
-	return fmt.Sprintf("%v", id), nil
+	return "", errNoID
 }
 
 // populatePayloadWithID populates the sdk.Record.Payload with id key

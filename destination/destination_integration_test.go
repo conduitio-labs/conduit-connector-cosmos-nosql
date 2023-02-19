@@ -360,6 +360,65 @@ func TestDestination_Write_successPopulatePayloadWithIDFromKey(t *testing.T) {
 	cancel()
 }
 
+func TestDestination_Write_successGetIDFromPayload(t *testing.T) {
+	var (
+		is  = is.New(t)
+		cfg = prepareConfig(t)
+		ctx = context.Background()
+	)
+
+	cli, err := getClient(cfg[config.KeyURI], cfg[config.KeyPrimaryKey])
+	is.NoErr(err)
+
+	db, err := cli.CreateDatabase(ctx, azcosmos.DatabaseProperties{ID: cfg[config.KeyDatabase]}, nil)
+	is.NoErr(err)
+
+	dbCli, err := cli.NewDatabase(db.DatabaseProperties.ID)
+	is.NoErr(err)
+
+	defer func() {
+		_, err = dbCli.Delete(context.Background(), nil)
+		is.NoErr(err)
+	}()
+
+	_, err = dbCli.CreateContainer(ctx, azcosmos.ContainerProperties{
+		ID: cfg[config.KeyContainer],
+		PartitionKeyDefinition: azcosmos.PartitionKeyDefinition{
+			Paths: []string{"/partKey"},
+		},
+	}, nil)
+	is.NoErr(err)
+
+	records := []sdk.Record{
+		{
+			Operation: sdk.OperationSnapshot,
+			Payload: sdk.Change{
+				After: sdk.StructuredData{
+					"id":      "random_id_1",
+					"field1":  1,
+					"field2":  "test_1",
+					"field3":  true,
+					"partKey": "partVal",
+				},
+			},
+		},
+	}
+
+	cctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	dest := Destination{}
+	is.NoErr(dest.Configure(cctx, cfg))
+	is.NoErr(dest.Open(cctx))
+
+	n, err := dest.Write(cctx, records)
+	is.Equal(n, 1)
+	is.NoErr(err)
+
+	is.NoErr(dest.Teardown(cctx))
+	cancel()
+}
+
 func TestDestination_Write_failedKeyAndPayloadHaveNoID(t *testing.T) {
 	var (
 		is  = is.New(t)
@@ -416,7 +475,7 @@ func TestDestination_Write_failedKeyAndPayloadHaveNoID(t *testing.T) {
 	n, err := dest.Write(cctx, records)
 	is.Equal(n, 0)
 	is.Equal(err.Error(), "write record: route record: get id from sdk.Record.Key: "+
-		"sdk.Record.Key does not contain the required \"id\" key")
+		"neither the sdk.Record.Key nor the sdk.Record.Payload.After contains the `id` key")
 
 	is.NoErr(dest.Teardown(cctx))
 	cancel()
