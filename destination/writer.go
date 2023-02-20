@@ -78,7 +78,7 @@ func (w *writer) Write(ctx context.Context, record sdk.Record) error {
 func (w *writer) create(ctx context.Context, record sdk.Record) error {
 	id, err := w.getID(&record)
 	if err != nil {
-		return fmt.Errorf("get id from sdk.Record.Key: %w", err)
+		return fmt.Errorf("get %q: %w", common.KeyID, err)
 	}
 
 	err = w.populatePayloadWithID(&record, id)
@@ -97,7 +97,7 @@ func (w *writer) create(ctx context.Context, record sdk.Record) error {
 func (w *writer) replace(ctx context.Context, record sdk.Record) error {
 	id, err := w.getID(&record)
 	if err != nil {
-		return fmt.Errorf("get id from sdk.Record.Key: %w", err)
+		return fmt.Errorf("get %q: %w", common.KeyID, err)
 	}
 
 	err = w.populatePayloadWithID(&record, id)
@@ -116,7 +116,7 @@ func (w *writer) replace(ctx context.Context, record sdk.Record) error {
 func (w *writer) delete(ctx context.Context, record sdk.Record) error {
 	id, err := w.getID(&record)
 	if err != nil {
-		return fmt.Errorf("get id from sdk.Record.Key: %w", err)
+		return fmt.Errorf("get %q: %w", common.KeyID, err)
 	}
 
 	_, err = w.containerClient.DeleteItem(ctx, w.partitionKey, id, nil)
@@ -141,10 +141,10 @@ func (w *writer) getID(record *sdk.Record) (string, error) {
 		}
 	}
 
-	if record.Payload.After != nil {
+	if record.Operation != sdk.OperationDelete {
 		payload := make(sdk.StructuredData)
 		if err := json.Unmarshal(record.Payload.After.Bytes(), &payload); err != nil {
-			return "", fmt.Errorf("unmarshal payload: %w", err)
+			return "", fmt.Errorf("unmarshal sdk.Record.Payload.After: %w", err)
 		}
 
 		if id, ok := payload[common.KeyID]; ok {
