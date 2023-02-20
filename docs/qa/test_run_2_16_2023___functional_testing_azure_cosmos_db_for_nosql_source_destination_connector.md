@@ -1,3 +1,9 @@
+**Test Run 2/16/2023 - Functional testing Azure Cosmos DB for NoSQL source/destination connector**
+
+**branch** https://github.com/conduitio-labs/conduit-connector-cosmos-nosql/tree/destination
+
+**commit** c818ef34764af98633a96cf070da7a618ae1395d
+
 | ID       | Title                                                                                                                                                                                                                                                          | Status | Comment |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- |
 | T3465071 | \----------------Required config------------------                                                                                                                                                                                                             | Passed |         |
