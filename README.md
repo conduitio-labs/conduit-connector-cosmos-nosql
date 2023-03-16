@@ -7,8 +7,8 @@ a Source and a Destination Azure Cosmos DB for NoSQL connectors.
 
 ## Prerequisites
 
-- [Go](https://go.dev/) 1.19
-- (optional) [golangci-lint](https://github.com/golangci/golangci-lint) 1.50.1
+- [Go](https://go.dev/) 1.20
+- (optional) [golangci-lint](https://github.com/golangci/golangci-lint) 1.51.2
 
 ## How to build?
 
