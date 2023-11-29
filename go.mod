@@ -2,6 +2,8 @@ module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 
 go 1.21
 
+toolchain go1.21.1
+
 require github.com/conduitio/conduit-connector-sdk v0.7.2
 
 require (
