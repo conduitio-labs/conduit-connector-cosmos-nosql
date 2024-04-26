@@ -1,14 +1,19 @@
-.PHONY: build test test-integration
+VERSION=$(shell git describe --tags --dirty --always)
 
+.PHONY: build
 build:
-	go build -o conduit-connector-cosmos-nosql cmd/connector/main.go
+	go build -ldflags "-X 'github.com/conduitio/conduit-connector-cosmos-nosql.version=${VERSION}'" -o conduit-connector-cosmos-nosql cmd/connector/main.go
 
+.PHONY: test
 test:
 	go test $(GOTEST_FLAGS) -v -race ./...
 
+.PHONY: lint
 lint:
-	golangci-lint run --config .golangci.yml
+	golangci-lint run
 
-dep:
-	go mod download
-	go mod tidy
+.PHONY: install-tools
+install-tools:
+	@echo Installing tools from tools.go
+	@go list -e -f '{{ join .Imports "\n" }}' tools.go | xargs -I % go list -f "%@{{.Module.Version}}" % | xargs -tI % go install %
+	@go mod tidy
