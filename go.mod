@@ -5,7 +5,6 @@ go 1.22.2
 require (
 	github.com/conduitio/conduit-connector-sdk v0.9.1
 	github.com/golangci/golangci-lint v1.59.1
-	go.uber.org/mock v0.4.0
 )
 
 require (
