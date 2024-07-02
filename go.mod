@@ -3,8 +3,12 @@ module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 go 1.22.2
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.0.3
 	github.com/conduitio/conduit-connector-sdk v0.9.1
+	github.com/golang/mock v1.4.4
 	github.com/golangci/golangci-lint v1.59.1
+	github.com/huandu/go-sqlbuilder v1.27.3
+	github.com/matryer/is v1.4.1
 )
 
 require (
@@ -15,6 +19,9 @@ require (
 	github.com/Antonboom/errname v0.1.13 // indirect
 	github.com/Antonboom/nilnil v0.1.9 // indirect
 	github.com/Antonboom/testifylint v1.3.1 // indirect
+	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.11.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.7.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/Crocmagnon/fatcontext v0.2.2 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
@@ -90,7 +97,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
-	github.com/huandu/xstrings v1.3.3 // indirect
+	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jgautheron/goconst v1.7.1 // indirect
@@ -115,7 +122,6 @@ require (
 	github.com/maratori/testableexamples v1.0.0 // indirect
 	github.com/maratori/testpackage v1.1.1 // indirect
 	github.com/matoous/godox v0.0.0-20230222163458-006bad1f9d26 // indirect
-	github.com/matryer/is v1.4.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect

@@ -1,4 +1,4 @@
-// Copyright © 2023 Meroxa, Inc. & Yalantis
+// Copyright © 2022 Meroxa, Inc. & Yalantis
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cosmosnosql
+package common
 
-import (
-	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/source"
-	sdk "github.com/conduitio/conduit-connector-sdk"
+const (
+	// KeyID is the mandatory key for each database item.
+	KeyID = "id"
+	// TestEnvNameURI is a key for connection uri pointed to an Azure Cosmos DB for NoSQL instance.
+	TestEnvNameURI = "COSMOS_NOSQL_URI"
+	// TestEnvNamePrimaryKey is a key for authentication with Azure Cosmos DB.
+	TestEnvNamePrimaryKey = "COSMOS_NOSQL_PRIMARY_KEY"
 )
-
-// Connector is a sdk.Connector of Azure Cosmos DB for NoSQL.
-var Connector = sdk.Connector{
-	NewSpecification: Specification,
-	NewSource:        source.New,
-	NewDestination:   nil,
-}
