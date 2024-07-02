@@ -3,8 +3,12 @@ module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 go 1.22.2
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.0.3
 	github.com/conduitio/conduit-connector-sdk v0.9.1
+	github.com/golang/mock v1.4.4
 	github.com/golangci/golangci-lint v1.59.1
+	github.com/huandu/go-sqlbuilder v1.27.3
+	github.com/matryer/is v1.4.1
 )
 
 require (
@@ -15,18 +19,85 @@ require (
 	github.com/Antonboom/errname v0.1.13 // indirect
 	github.com/Antonboom/nilnil v0.1.9 // indirect
 	github.com/Antonboom/testifylint v1.3.1 // indirect
+	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.11.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.7.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/Crocmagnon/fatcontext v0.2.2 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
 	github.com/GaijinEntertainment/go-exhaustruct/v3 v3.2.0 // indirect
-	github.com/conduitio/conduit-connector-protocol v0.4.0 // indirect
-	github.com/fatih/color v1.7.0 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/hashicorp/go-hclog v0.14.1 // indirect
-	github.com/hashicorp/go-plugin v1.4.3 // indirect
-	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect
-	github.com/huandu/xstrings v1.3.3 // indirect
+	github.com/Masterminds/goutils v1.1.1 // indirect
+	github.com/Masterminds/semver/v3 v3.2.1 // indirect
+	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
+	github.com/OpenPeeDeeP/depguard/v2 v2.2.0 // indirect
+	github.com/alecthomas/go-check-sumtype v0.1.4 // indirect
+	github.com/alexkohler/nakedret/v2 v2.0.4 // indirect
+	github.com/alexkohler/prealloc v1.0.0 // indirect
+	github.com/alingse/asasalint v0.0.11 // indirect
+	github.com/ashanbrown/forbidigo v1.6.0 // indirect
+	github.com/ashanbrown/makezero v1.1.1 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bkielbasa/cyclop v1.2.1 // indirect
+	github.com/blizzy78/varnamelen v0.8.0 // indirect
+	github.com/bombsimon/wsl/v4 v4.2.1 // indirect
+	github.com/breml/bidichk v0.2.7 // indirect
+	github.com/breml/errchkjson v0.3.6 // indirect
+	github.com/butuzov/ireturn v0.3.0 // indirect
+	github.com/butuzov/mirror v1.2.0 // indirect
+	github.com/catenacyber/perfsprint v0.7.1 // indirect
+	github.com/ccojocar/zxcvbn-go v1.0.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/charithe/durationcheck v0.0.10 // indirect
+	github.com/chavacava/garif v0.1.0 // indirect
+	github.com/ckaznocha/intrange v0.1.2 // indirect
+	github.com/conduitio/conduit-commons v0.2.0 // indirect
+	github.com/conduitio/conduit-connector-protocol v0.6.0 // indirect
+	github.com/curioswitch/go-reassign v0.2.0 // indirect
+	github.com/daixiang0/gci v0.13.4 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/denis-tingaikin/go-header v0.5.0 // indirect
+	github.com/ettle/strcase v0.2.0 // indirect
+	github.com/fatih/color v1.17.0 // indirect
+	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/firefart/nonamedreturns v1.0.5 // indirect
+	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/fzipp/gocyclo v0.6.0 // indirect
+	github.com/ghostiam/protogetter v0.3.6 // indirect
+	github.com/go-critic/go-critic v0.11.4 // indirect
+	github.com/go-toolsmith/astcast v1.1.0 // indirect
+	github.com/go-toolsmith/astcopy v1.1.0 // indirect
+	github.com/go-toolsmith/astequal v1.2.0 // indirect
+	github.com/go-toolsmith/astfmt v1.1.0 // indirect
+	github.com/go-toolsmith/astp v1.1.0 // indirect
+	github.com/go-toolsmith/strparse v1.1.0 // indirect
+	github.com/go-toolsmith/typep v1.1.0 // indirect
+	github.com/go-viper/mapstructure/v2 v2.0.0 // indirect
+	github.com/go-xmlfmt/xmlfmt v1.1.2 // indirect
+	github.com/gobwas/glob v0.2.3 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/gofrs/flock v0.8.1 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/golangci/dupl v0.0.0-20180902072040-3e9179ac440a // indirect
+	github.com/golangci/gofmt v0.0.0-20231018234816-f50ced29576e // indirect
+	github.com/golangci/misspell v0.6.0 // indirect
+	github.com/golangci/modinfo v0.3.4 // indirect
+	github.com/golangci/plugin-module-register v0.1.1 // indirect
+	github.com/golangci/revgrep v0.5.3 // indirect
+	github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/gordonklaus/ineffassign v0.1.0 // indirect
+	github.com/gostaticanalysis/analysisutil v0.7.1 // indirect
+	github.com/gostaticanalysis/comment v1.4.2 // indirect
+	github.com/gostaticanalysis/forcetypeassert v0.1.0 // indirect
+	github.com/gostaticanalysis/nilerr v0.1.1 // indirect
+	github.com/hashicorp/go-hclog v1.5.0 // indirect
+	github.com/hashicorp/go-plugin v1.6.0 // indirect
+	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/hashicorp/yamux v0.1.1 // indirect
+	github.com/hexops/gotextdiff v1.0.3 // indirect
+	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jgautheron/goconst v1.7.1 // indirect
@@ -51,7 +122,6 @@ require (
 	github.com/maratori/testableexamples v1.0.0 // indirect
 	github.com/maratori/testpackage v1.1.1 // indirect
 	github.com/matoous/godox v0.0.0-20230222163458-006bad1f9d26 // indirect
-	github.com/matryer/is v1.4.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
