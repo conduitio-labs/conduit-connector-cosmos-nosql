@@ -17,6 +17,7 @@ package source
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -215,11 +216,11 @@ func (iter *iterator) latestSnapshotValue(ctx context.Context) (any, error) {
 		return nil, fmt.Errorf("select latest snapshot value: %w", err)
 	}
 
-	if items != nil {
+	if len(items) > 0 {
 		return items[0][iter.orderingKey], nil
 	}
 
-	return nil, nil
+	return nil, errors.New("no items found")
 }
 
 // latestSnapshotValue returns the value of the orderingKey key of the most recent value item.
