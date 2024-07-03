@@ -5,7 +5,7 @@ go 1.22.2
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.0.3
 	github.com/conduitio/conduit-connector-sdk v0.9.1
-	github.com/golang/mock v1.4.4
+	github.com/golang/mock v1.6.0
 	github.com/golangci/golangci-lint v1.59.1
 	github.com/huandu/go-sqlbuilder v1.27.3
 	github.com/matryer/is v1.4.1
