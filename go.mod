@@ -10,6 +10,7 @@ require (
 	github.com/huandu/go-sqlbuilder v1.27.3
 	github.com/matryer/is v1.4.1
 	go.uber.org/goleak v1.3.0
+	go.uber.org/mock v0.4.0
 )
 
 require (
