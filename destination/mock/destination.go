@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	conduit_connector_sdk "github.com/conduitio/conduit-connector-sdk"
+	sdk "github.com/conduitio/conduit-connector-sdk"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockWriter) EXPECT() *MockWriterMockRecorder {
 }
 
 // Write mocks base method.
-func (m *MockWriter) Write(ctx context.Context, record conduit_connector_sdk.Record) error {
+func (m *MockWriter) Write(ctx context.Context, record sdk.Record) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Write", ctx, record)
 	ret0, _ := ret[0].(error)
