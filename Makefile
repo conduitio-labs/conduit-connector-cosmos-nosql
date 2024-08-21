@@ -20,10 +20,12 @@ dep:
 .PHONY: paramgen
 paramgen:
 	paramgen -path=./source -output=source_params.go Config
+	paramgen -path=./destination -output=destination_params.go Config
 
 .PHONY: mockgen
 mockgen:
 	mockgen -package mock -source source/source.go -destination source/mock/source.go
+	mockgen -package mock -source destination/destination.go -destination destination/mock/destination.go
 
 .PHONY: generate
 generate:
