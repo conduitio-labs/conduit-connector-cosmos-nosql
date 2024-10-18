@@ -23,8 +23,8 @@ import (
 	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
 	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/source/mock"
 	"github.com/conduitio/conduit-commons/opencdc"
-	"github.com/golang/mock/gomock"
 	"github.com/matryer/is"
+	"go.uber.org/mock/gomock"
 )
 
 func TestSource_Configure_success(t *testing.T) {
