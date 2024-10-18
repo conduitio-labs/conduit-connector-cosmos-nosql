@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	sdk "github.com/conduitio/conduit-connector-sdk"
+	"github.com/conduitio/conduit-commons/opencdc"
 )
 
 // position is an iterator position.
@@ -31,8 +31,8 @@ type position struct {
 	LatestSnapshotValue any `json:"latestSnapshotValue"`
 }
 
-// parsePosition converts an [sdk.Position] into a [position].
-func parsePosition(sdkPosition sdk.Position) (*position, error) {
+// parsePosition converts an [opencdc.Position] into a [position].
+func parsePosition(sdkPosition opencdc.Position) (*position, error) {
 	pos := new(position)
 
 	if sdkPosition == nil {
@@ -40,14 +40,14 @@ func parsePosition(sdkPosition sdk.Position) (*position, error) {
 	}
 
 	if err := json.Unmarshal(sdkPosition, pos); err != nil {
-		return nil, fmt.Errorf("unmarshal sdk.Position into position: %w", err)
+		return nil, fmt.Errorf("unmarshal opencdc.Position into position: %w", err)
 	}
 
 	return pos, nil
 }
 
-// marshal marshals the underlying [position] into a [sdk.Position] as JSON bytes.
-func (p position) marshal() (sdk.Position, error) {
+// marshal marshals the underlying [position] into a [opencdc.Position] as JSON bytes.
+func (p position) marshal() (opencdc.Position, error) {
 	positionBytes, err := json.Marshal(p)
 	if err != nil {
 		return nil, fmt.Errorf("marshal position: %w", err)

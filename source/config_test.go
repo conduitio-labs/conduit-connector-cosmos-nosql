@@ -15,9 +15,11 @@
 package source
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
+	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
@@ -26,13 +28,25 @@ func TestConfig_ParseSource_success(t *testing.T) {
 
 	var (
 		raw = map[string]string{
-			ConfigKeyOrderingKey:    "id",
-			ConfigKeyKeys:           "name,created_at",
-			ConfigKeySnapshot:       "false",
-			ConfigKeyMetaProperties: "true",
-			ConfigKeyBatchSize:      "5000",
+			config.KeyURI:            "https://localhost:8081",
+			config.KeyPrimaryKey:     "C2y6yDjf5",
+			config.KeyDatabase:       "database_id",
+			config.KeyContainer:      "container_it",
+			config.KeyPartitionValue: "partVal_test",
+			ConfigKeyOrderingKey:     "id",
+			ConfigKeyKeys:            "name,created_at",
+			ConfigKeySnapshot:        "false",
+			ConfigKeyMetaProperties:  "true",
+			ConfigKeyBatchSize:       "5000",
 		}
 		want = Config{
+			Config: config.Config{
+				URI:            "https://localhost:8081",
+				PrimaryKey:     "C2y6yDjf5",
+				Database:       "database_id",
+				Container:      "container_it",
+				PartitionValue: "partVal_test",
+			},
 			OrderingKey:    "id",
 			Keys:           []string{"name", "created_at"},
 			Snapshot:       false,
@@ -42,7 +56,7 @@ func TestConfig_ParseSource_success(t *testing.T) {
 	)
 
 	var got Config
-	err := sdk.Util.ParseConfig(raw, &got)
+	err := sdk.Util.ParseConfig(context.Background(), raw, &got, New().Parameters())
 	if err != nil {
 		t.Errorf("unexpected error: %s", err.Error())
 

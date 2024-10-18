@@ -12,19 +12,6 @@ test:
 lint:
 	golangci-lint run
 
-.PHONY: dep
-dep:
-	go mod download
-	go mod tidy
-
-.PHONY: paramgen
-paramgen:
-	paramgen -path=./source -output=source_params.go Config
-
-.PHONY: mockgen
-mockgen:
-	mockgen -package mock -source source/source.go -destination source/mock/source.go
-
 .PHONY: generate
 generate:
 	go generate ./...
