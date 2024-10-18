@@ -35,7 +35,7 @@ type Config struct {
 
 	// The name of a key that is used for ordering items.
 	OrderingKey string `json:"orderingKey" validate:"required"`
-	// Comma-separated list of key names to build the sdk.Record.Key.
+	// Comma-separated list of key names to build the opencdc.Record.Key.
 	Keys []string `json:"keys"`
 	// Determines whether the connector takes a snapshot
 	// of all items before starting CDC mode.

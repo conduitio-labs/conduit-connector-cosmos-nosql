@@ -25,6 +25,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
 	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/common"
 	"github.com/conduitio-labs/conduit-connector-cosmos-nosql/config"
+	"github.com/conduitio/conduit-commons/opencdc"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/matryer/is"
 )
@@ -187,11 +188,11 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 
 	record, err := src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "1",
 		"key2": float64(1),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":1,"latestSnapshotValue":2}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":1,"latestSnapshotValue":2}`))
 	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"3794cb1a","key1":"1","key2":1,"partKey":"partVal"}`))
 
 	cancel()
@@ -221,20 +222,20 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 
 	record, err = src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "2",
 		"key2": float64(2),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":2,"latestSnapshotValue":2}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":2,"latestSnapshotValue":2}`))
 	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"ed053fb6","key1":"2","key2":2,"partKey":"partVal"}`))
 
 	record, err = src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "3",
 		"key2": float64(3),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":3,"latestSnapshotValue":null}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":3,"latestSnapshotValue":null}`))
 	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"2452d9a6","key1":"3","key2":3,"partKey":"partVal"}`))
 
 	_, err = src.Read(cctx)
@@ -251,11 +252,11 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 
 	record, err = src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "4",
 		"key2": float64(4),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":4,"latestSnapshotValue":null}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":4,"latestSnapshotValue":null}`))
 	is.Equal(record.Payload.After.Bytes(), []byte(`{"id":"d0e7c1af","key1":"4","key2":4,"partKey":"partVal"}`))
 
 	cancel()
@@ -340,11 +341,11 @@ func TestSource_Read_snapshotIsFalse(t *testing.T) {
 
 	record, err := src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "3",
 		"key2": float64(3),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":3,"latestSnapshotValue":null}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":3,"latestSnapshotValue":null}`))
 
 	_, err = src.Read(cctx)
 	is.Equal(err, sdk.ErrBackoffRetry)
@@ -360,11 +361,11 @@ func TestSource_Read_snapshotIsFalse(t *testing.T) {
 
 	record, err = src.Read(cctx)
 	is.NoErr(err)
-	is.Equal(record.Key, sdk.StructuredData(map[string]any{
+	is.Equal(record.Key, opencdc.StructuredData(map[string]any{
 		"key1": "4",
 		"key2": float64(4),
 	}))
-	is.Equal(record.Position, sdk.Position(`{"lastProcessedValue":4,"latestSnapshotValue":null}`))
+	is.Equal(record.Position, opencdc.Position(`{"lastProcessedValue":4,"latestSnapshotValue":null}`))
 
 	cancel()
 

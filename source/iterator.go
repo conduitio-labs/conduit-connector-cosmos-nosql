@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos"
+	"github.com/conduitio/conduit-commons/opencdc"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/huandu/go-sqlbuilder"
 )
@@ -53,11 +54,11 @@ type iterator struct {
 	metaProperties bool
 	batchSize      uint
 
-	items []sdk.StructuredData
+	items []opencdc.StructuredData
 }
 
 // newIterator creates a new instance of the iterator.
-func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (*iterator, error) {
+func newIterator(ctx context.Context, config Config, sdkPosition opencdc.Position) (*iterator, error) {
 	iter := &iterator{
 		partitionKey:   azcosmos.NewPartitionKeyString(config.PartitionValue),
 		container:      config.Container,
@@ -99,7 +100,7 @@ func newIterator(ctx context.Context, config Config, sdkPosition sdk.Position) (
 		}
 
 		if config.Snapshot {
-			// set this value to know where to stop returning records with [sdk.OperationSnapshot] operation
+			// set this value to know where to stop returning records with [opencdc.OperationSnapshot] operation
 			iter.position.LatestSnapshotValue = latestSnapshotValue
 
 			return iter, nil
@@ -145,12 +146,12 @@ func (iter *iterator) HasNext(ctx context.Context) (bool, error) {
 }
 
 // Next returns the next record.
-func (iter *iterator) Next() (sdk.Record, error) {
-	key := make(sdk.StructuredData)
+func (iter *iterator) Next() (opencdc.Record, error) {
+	key := make(opencdc.StructuredData)
 	for i := range iter.keys {
 		val, ok := iter.items[0][iter.keys[i]]
 		if !ok {
-			return sdk.Record{}, fmt.Errorf("key %q not found", iter.keys[i])
+			return opencdc.Record{}, fmt.Errorf("key %q not found", iter.keys[i])
 		}
 
 		key[iter.keys[i]] = val
@@ -165,7 +166,7 @@ func (iter *iterator) Next() (sdk.Record, error) {
 
 	rowBytes, err := json.Marshal(iter.items[0])
 	if err != nil {
-		return sdk.Record{}, fmt.Errorf("marshal item: %w", err)
+		return opencdc.Record{}, fmt.Errorf("marshal item: %w", err)
 	}
 
 	// set a new position into the variable,
@@ -176,12 +177,12 @@ func (iter *iterator) Next() (sdk.Record, error) {
 
 	convertedPosition, err := pos.marshal()
 	if err != nil {
-		return sdk.Record{}, fmt.Errorf("convert position :%w", err)
+		return opencdc.Record{}, fmt.Errorf("convert position :%w", err)
 	}
 
 	iter.position = &pos
 
-	metadata := sdk.Metadata{
+	metadata := opencdc.Metadata{
 		metadataFieldContainer: iter.container,
 	}
 	metadata.SetCreatedAt(time.Now().UTC())
@@ -195,10 +196,10 @@ func (iter *iterator) Next() (sdk.Record, error) {
 	}
 
 	if pos.LatestSnapshotValue != nil {
-		return sdk.Util.Source.NewRecordSnapshot(convertedPosition, metadata, key, sdk.RawData(rowBytes)), nil
+		return sdk.Util.Source.NewRecordSnapshot(convertedPosition, metadata, key, opencdc.RawData(rowBytes)), nil
 	}
 
-	return sdk.Util.Source.NewRecordCreate(convertedPosition, metadata, key, sdk.RawData(rowBytes)), nil
+	return sdk.Util.Source.NewRecordCreate(convertedPosition, metadata, key, opencdc.RawData(rowBytes)), nil
 }
 
 // latestSnapshotValue returns the value of the orderingKey key
@@ -265,7 +266,7 @@ func (iter *iterator) loadItems(ctx context.Context) error {
 // selectItems selects a batch of items by a query from a database.
 func (iter *iterator) selectItems(
 	ctx context.Context, query string, queryParameters ...azcosmos.QueryParameter,
-) ([]sdk.StructuredData, error) {
+) ([]opencdc.StructuredData, error) {
 	queryPager := iter.containerClient.NewQueryItemsPager(query, iter.partitionKey, &azcosmos.QueryOptions{
 		QueryParameters: queryParameters,
 	})
@@ -283,7 +284,7 @@ func (iter *iterator) selectItems(
 		return nil, nil
 	}
 
-	items := make([]sdk.StructuredData, len(queryResponse.Items))
+	items := make([]opencdc.StructuredData, len(queryResponse.Items))
 	for i := range queryResponse.Items {
 		if err = json.Unmarshal(queryResponse.Items[i], &items[i]); err != nil {
 			return nil, fmt.Errorf("unmarshal item: %w", err)

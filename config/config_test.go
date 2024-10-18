@@ -42,7 +42,7 @@ func TestConfig_Parse_success(t *testing.T) {
 	)
 
 	var got Config
-	err := sdk.Util.ParseConfig(raw, &got)
+	err := sdk.Util.ParseConfig(ctx, raw, &got)
 	if err != nil {
 		t.Errorf("unexpected error: %s", err.Error())
 
