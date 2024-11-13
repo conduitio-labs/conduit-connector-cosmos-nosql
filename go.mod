@@ -3,7 +3,7 @@ module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 go 1.23.2
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.1.0
+	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.2.0
 	github.com/conduitio/conduit-commons v0.5.0
 	github.com/conduitio/conduit-connector-sdk v0.12.0
 	github.com/golangci/golangci-lint v1.62.0
@@ -22,7 +22,7 @@ require (
 	github.com/Antonboom/nilnil v1.0.0 // indirect
 	github.com/Antonboom/testifylint v1.5.0 // indirect
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.14.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.16.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.10.0 // indirect
 	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
 	github.com/Crocmagnon/fatcontext v0.5.2 // indirect
