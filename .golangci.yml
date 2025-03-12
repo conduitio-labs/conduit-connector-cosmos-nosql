@@ -5,7 +5,8 @@ linters-settings:
   gofmt:
     simplify: false
   govet:
-    shadow: true
+    disable:
+      - shadow
   nolintlint:
     allow-unused: false # report any unused nolint directives
     require-explanation: true # require an explanation for nolint directives
@@ -25,7 +26,7 @@ linters-settings:
     forbid:
       - '^print.*'
       - 'fmt\.Print.*'
-    exclude_godoc_examples: false
+    exclude-godoc-examples: false
 
 linters:
   # please, do not use `enable-all`: it's deprecated and will be removed soon.
@@ -39,7 +40,6 @@ linters:
     - errname
     - errorlint
     - exhaustive
-    - exportloopref
     - forbidigo
     - forcetypeassert
     - funlen
@@ -79,12 +79,12 @@ linters:
     - stylecheck
     - sqlclosecheck
     - tagliatelle
-    - tenv
     - thelper
     - tparallel
     - typecheck
     - unconvert
     - unparam
+    - usetesting
     - unused
     - wastedassign
     - whitespace
