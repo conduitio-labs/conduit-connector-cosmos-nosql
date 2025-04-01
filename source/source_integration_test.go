@@ -34,7 +34,7 @@ func TestSource_Read_databaseDoesNotExist(t *testing.T) {
 	var (
 		is  = is.New(t)
 		cfg = prepareConfig(t, "key1", "true")
-		ctx = context.Background()
+		ctx = t.Context()
 	)
 
 	src := New()
@@ -50,7 +50,7 @@ func TestSource_Read_containerDoesNotExist(t *testing.T) {
 	var (
 		is  = is.New(t)
 		cfg = prepareConfig(t, "orderingKey", "true")
-		ctx = context.Background()
+		ctx = t.Context()
 	)
 
 	cli, err := getClient(cfg[config.KeyURI], cfg[config.KeyPrimaryKey])
@@ -85,7 +85,7 @@ func TestSource_Read_containerHasNoData(t *testing.T) {
 	cli, err := getClient(cfg[config.KeyURI], cfg[config.KeyPrimaryKey])
 	is.NoErr(err)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	defer cancel()
 
 	db, err := cli.CreateDatabase(ctx, azcosmos.DatabaseProperties{ID: cfg[config.KeyDatabase]}, nil)
@@ -95,7 +95,7 @@ func TestSource_Read_containerHasNoData(t *testing.T) {
 	is.NoErr(err)
 
 	defer func() {
-		_, err = dbCli.Delete(context.Background(), nil)
+		_, err = dbCli.Delete(t.Context(), nil)
 		is.NoErr(err)
 	}()
 
@@ -120,13 +120,13 @@ func TestSource_Read_containerHasNoData(t *testing.T) {
 
 	cancel()
 
-	err = src.Teardown(context.Background())
+	err = src.Teardown(t.Context())
 	is.NoErr(err)
 }
 
 func TestSource_Read_combinedIterator(t *testing.T) {
 	var (
-		ctx = context.Background()
+		ctx = t.Context()
 		is  = is.New(t)
 		cfg = prepareConfig(t, "key2", "true", "key1", "key2")
 	)
@@ -141,7 +141,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 	is.NoErr(err)
 
 	defer func() {
-		_, err = dbCli.Delete(context.Background(), nil)
+		_, err = dbCli.Delete(t.Context(), nil)
 		is.NoErr(err)
 	}()
 
@@ -197,7 +197,7 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 
 	cancel()
 
-	err = src.Teardown(context.Background())
+	err = src.Teardown(t.Context())
 	is.NoErr(err)
 
 	// insert the third item
@@ -261,13 +261,13 @@ func TestSource_Read_combinedIterator(t *testing.T) {
 
 	cancel()
 
-	err = src.Teardown(context.Background())
+	err = src.Teardown(t.Context())
 	is.NoErr(err)
 }
 
 func TestSource_Read_snapshotIsFalse(t *testing.T) {
 	var (
-		ctx = context.Background()
+		ctx = t.Context()
 		is  = is.New(t)
 		cfg = prepareConfig(t, "key2", "false", "key1", "key2")
 	)
@@ -282,7 +282,7 @@ func TestSource_Read_snapshotIsFalse(t *testing.T) {
 	is.NoErr(err)
 
 	defer func() {
-		_, err = dbCli.Delete(context.Background(), nil)
+		_, err = dbCli.Delete(t.Context(), nil)
 		is.NoErr(err)
 	}()
 
@@ -369,7 +369,7 @@ func TestSource_Read_snapshotIsFalse(t *testing.T) {
 
 	cancel()
 
-	err = src.Teardown(context.Background())
+	err = src.Teardown(t.Context())
 	is.NoErr(err)
 }
 
