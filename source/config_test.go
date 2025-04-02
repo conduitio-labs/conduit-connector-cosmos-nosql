@@ -15,7 +15,6 @@
 package source
 
 import (
-	"context"
 	"reflect"
 	"testing"
 
@@ -56,7 +55,7 @@ func TestConfig_ParseSource_success(t *testing.T) {
 	)
 
 	var got Config
-	err := sdk.Util.ParseConfig(context.Background(), raw, &got, New().Parameters())
+	err := sdk.Util.ParseConfig(t.Context(), raw, &got, New().Parameters())
 	if err != nil {
 		t.Errorf("unexpected error: %s", err.Error())
 
