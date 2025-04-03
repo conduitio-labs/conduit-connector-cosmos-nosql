@@ -1,6 +1,7 @@
 module github.com/conduitio-labs/conduit-connector-cosmos-nosql
 
 go 1.24.2
+
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/data/azcosmos v1.3.0
 	github.com/conduitio/conduit-commons v0.5.2
